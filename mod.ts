@@ -12,7 +12,9 @@ console.log("sveltekit-stories-watcher started.");
 
 await sync(input, output);
 const watcher = Deno.watchFs(input);
-for await (const _ of watcher) {
-  // TODO: Do better than this by actually looking at the event.
-  await sync(input, output);
+for await (const ev of watcher) {
+  if (ev.kind === "create" || ev.kind === "remove") {
+    // TODO: Do better than this by actually looking at the event.
+    await sync(input, output);
+  }
 }
